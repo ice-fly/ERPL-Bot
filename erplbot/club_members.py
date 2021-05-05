@@ -89,9 +89,9 @@ class ClubMember:
             # Create a new name object
             club_member.name = Name(first=first_name,last=last_name)
             rolled_str = next(list_iter)
-            
-            # Sets club_member.rolled bool
-            club_member.rolled = rolled_str.lower() == rolled_str
+
+            # Sets club_member.rolled bool... (in because sheets is cursed and has 'true & TRUE)
+            club_member.rolled = 'true' in rolled_str.lower()
 
         # If we reached the end of the list before we were meant to
         except StopIteration:
@@ -120,14 +120,11 @@ class ClubMember:
             # If it does have a valid row
             # This 'range' is just one single cell that represents if this member is in the server or not
             value_range = f'{sheet_name}{col}{self.row}:{col}{self.row}'
-            # The new value should be a stringr
-            new_value = 'true' if rolled else 'false'
             # We need to do this because this is one row, and one column
-            values = [ [ new_value ] ]
+            values = [ [ rolled ] ]
             # Set the value in the sheet finally
             google_sheets.set_values(sheetId, value_range, values)
-            print(f'Updated member {self.name} role value in spreadsheet to {new_value}. {value_range}')
-            
+            print(f'Updated member {self.name} role value in spreadsheet to {rolled}. {value_range}')            
 
 def get_members_from_spreadsheet(google_sheets, sheetId, value_range):
     """
